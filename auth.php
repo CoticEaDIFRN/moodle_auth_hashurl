@@ -56,17 +56,16 @@ class auth_plugin_hashurl extends auth_plugin_base {
 
             if (!empty($_GET['transactiontoken'])) {
               $url_validacao = substr_replace($this->config->validation_url, "{transactiontoken}", $_GET['transactiontoken']);
-              //$url_validacao = "https://ead.ifrn.edu.br/inscricao/sso_link/confirmar/{$_GET['transactiontoken']}/";
-              //https://hostname/validation/{transactiontoken}/
+              $url_login = substr_replace($this->config->login_url);
               $response = file_get_contents($url_validacao);
               if (!$response) {
-                redirect("https://ead.ifrn.edu.br/inscricao/");
+                redirect($url_login);
                 exit();
               }
               $data = json_decode($response);
 
               if ($_GET['transactiontoken'] != $data->transactiontoken) {
-                echo "Erro de autenticação. Tente <a href='https://ead.ifrn.edu.br/inscricao/'>acessar</a> novamente.";
+                echo "Erro de autenticação. Tente <a href=$url_login>acessar</a> novamente.";
               }
               $cpf = preg_replace("/[^0-9]/", "", $data->cpf);
               $user = $DB->get_record('user', array('username'=>$cpf));
@@ -95,9 +94,10 @@ class auth_plugin_hashurl extends auth_plugin_base {
         function logoutpage_hook() {
             global $USER;     // use $USER->auth to find the plugin used for login
             global $redirect; // can be used to override redirect after logout
+            $url_logout = substr_replace($this->config->logout_url);
             //override if needed
             if (strlen($USER->username)==11) {
-                $redirect = "https://ead.ifrn.edu.br/inscricao/";
+                $redirect = $url_logout;
             }
         }
 
