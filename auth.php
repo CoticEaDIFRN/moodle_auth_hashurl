@@ -39,10 +39,6 @@ class auth_plugin_hashurl extends auth_plugin_base {
                 exit();
             }
             $data = json_decode($response);
-
-            if ($_GET['transactiontoken'] != $data->transactiontoken) {
-                echo "Erro de autenticação. Tente <a href='{$this->config->login_url}'>acessar</a> novamente.";
-            }
             $cpf = preg_replace("/[^0-9]/", "", $data->cpf);
             $user = $DB->get_record('user', array('username'=>$cpf));
             $frm->username = $cpf;
