@@ -32,7 +32,7 @@ class auth_plugin_hashurl extends auth_plugin_base {
         }
 
         if (!empty($_GET['transactiontoken'])) {
-            $url_validacao = substr_replace($this->config->validation_url, "{transactiontoken}", $_GET['transactiontoken']);
+            $url_validacao = str_replace("{transactiontoken}", $_GET['transactiontoken'], $this->config->validation_url);
             $url_login = substr_replace($this->config->login_url);
             $response = file_get_contents($url_validacao);
             if (!$response) {
