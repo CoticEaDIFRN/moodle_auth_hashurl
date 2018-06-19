@@ -33,16 +33,15 @@ class auth_plugin_hashurl extends auth_plugin_base {
 
         if (!empty($_GET['transactiontoken'])) {
             $url_validacao = str_replace("{transactiontoken}", $_GET['transactiontoken'], $this->config->validation_url);
-            $url_login = substr_replace($this->config->login_url);
             $response = file_get_contents($url_validacao);
             if (!$response) {
-                redirect($url_login);
+                redirect($this->config->login_url);
                 exit();
             }
             $data = json_decode($response);
 
             if ($_GET['transactiontoken'] != $data->transactiontoken) {
-                echo "Erro de autenticação. Tente <a href=$url_login>acessar</a> novamente.";
+                echo "Erro de autenticação. Tente <a href='{$this->config->login_url}'>acessar</a> novamente.";
             }
             $cpf = preg_replace("/[^0-9]/", "", $data->cpf);
             $user = $DB->get_record('user', array('username'=>$cpf));
