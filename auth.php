@@ -53,9 +53,8 @@ class auth_plugin_hashurl extends auth_plugin_base {
     function logoutpage_hook() {
         global $USER;     // use $USER->auth to find the plugin used for login
         global $redirect; // can be used to override redirect after logout
-        $url_logout = substr_replace($this->config->logout_url);
         if (strlen($USER->username)==11) {
-            $redirect = $url_logout;
+            $redirect = $this->config->logout_url;
         }
     }
 
